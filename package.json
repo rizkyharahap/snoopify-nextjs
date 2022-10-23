@@ -8,17 +8,23 @@
     "test:ci": "jest --ci"
   },
   "dependencies": {
+    "@tanstack/react-query": "^4.13.0",
     "next": "latest",
     "react": "^18.1.0",
     "react-dom": "^18.1.0"
   },
   "devDependencies": {
+    "@tanstack/react-query-devtools": "^4.13.0",
     "@testing-library/jest-dom": "5.16.4",
     "@testing-library/react": "13.2.0",
     "@testing-library/user-event": "14.2.0",
     "@types/react": "18.0.9",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "husky": "^8.0.1",
     "jest": "28.1.0",
     "jest-environment-jsdom": "28.1.0",
+    "prettier": "^2.7.1",
     "typescript": "4.6.4"
   }
 }
