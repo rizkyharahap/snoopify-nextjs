@@ -36,7 +36,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 
 # https://www.baeldung.com/linux/docker-set-user-container-host
 RUN addgroup -g 1001 -S nodejs
-RUN adduser -S next -u 1001
+RUN adduser -S nextjs -u 1001
 
 COPY --from=builder /app/public ./public
 
@@ -49,7 +49,7 @@ RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-USER next
+USER nextjs
 
 EXPOSE 3000
 
