@@ -14,7 +14,7 @@ FROM base AS builder
 WORKDIR /app
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
-RUN npm run build --production --ignore-scripts --prefer-offline
+RUN npm run build --production --ignore-scripts
 
 # Production image, copy all the files and run next
 FROM base AS runner
@@ -48,8 +48,6 @@ RUN chown nextjs:nodejs .next
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-USER next
 
 EXPOSE 3000
 
