@@ -4,26 +4,39 @@ FROM node:22-alpine AS base
 RUN apk update && apk add --no-cache libc6-compat && apk add git
 
 FROM base AS deps
+
 WORKDIR /app
-
 COPY package.json ./
-RUN npm install install --frozen-lockfile
+RUN npm install --frozen-lockfile
 
+# Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+COPY --from=deps /app/node_modules ./node_modules
 RUN npm run build --production --ignore-scripts --prefer-offline
 
+# Production image, copy all the files and run next
 FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
 
+# Next.js collects completely anonymous telemetry data about general usage.
+# Learn more here: https://nextjs.org/telemetry
+# Uncomment the following line in case you want to disable telemetry.
 ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+# https://refine.dev/blog/docker-build-args-and-env-vars
+# Set build argument and environment variable
+# ARG NEXT_PUBLIC_API_KEY
+# ARG DATABASE_URL
+# ENV NEXT_PUBLIC_API_KEY=$NEXT_PUBLIC_API_KEY
+# ENV DATABASE_URL=$DATABASE_URL
+
+# https://www.baeldung.com/linux/docker-set-user-container-host
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nextjs -u 1001
 
 COPY --from=builder /app/public ./public
 
@@ -36,16 +49,11 @@ RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-USER nextjs
+USER next
 
 EXPOSE 3000
 
 ENV PORT 3000
-
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry.
-ENV NEXT_TELEMETRY_DISABLED 1
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
