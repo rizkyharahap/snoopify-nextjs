@@ -32,7 +32,7 @@ jobs:
         run: gcloud auth configure-docker gcr.io
 
       - name: Build and Push Docker image
-        working-directory: ./
+        context: .
         # Write your env here
         # run: |
         #   docker build \
@@ -41,7 +41,7 @@ jobs:
         #   -t gcr.io/<Project_ID>/<Image>:latest .
         #   docker push gcr.io/${{ secrets.PROJECT_ID }}/<Image>:latest
         run: |
-          docker build . --file Dockerfile --tag gcr.io/${{ secrets.PROJECT_ID }}/snoopify-dev:latest
+          docker build --tag gcr.io/${{ secrets.PROJECT_ID }}/snoopify-dev:latest .
           docker push gcr.io/${{ secrets.PROJECT_ID }}/snoopify-dev:latest
 
       - name: Deploy Docker container to VM
