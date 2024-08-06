@@ -41,6 +41,7 @@ jobs:
         #   docker push gcr.io/${{ secrets.PROJECT_ID }}/<Image>:latest
         run: |
           docker build \
+          . --file Dockerfile \
           -t gcr.io/${{ secrets.PROJECT_ID }}/snoopify-dev:latest .
           docker push gcr.io/${{ secrets.PROJECT_ID }}/snoopify-dev:latest
 
