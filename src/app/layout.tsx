@@ -5,22 +5,22 @@ import "./globals.css";
 const inter = localFont({
   src: [
     {
-      path: "./fonts/inter_18pt-Regular.ttf",
+      path: "../../public/fonts/Inter_18pt-Regular.ttf",
       weight: "400",
       style: "normal",
     },
     {
-      path: "./fonts/inter_18pt-Italic.ttf",
+      path: "../../public/fonts/Inter_18pt-Italic.ttf",
       weight: "400",
       style: "italic",
     },
     {
-      path: "./fonts/inter_18pt-Bold.ttf",
+      path: "../../public/fonts/Inter_18pt-Bold.ttf",
       weight: "700",
       style: "normal",
     },
     {
-      path: "./fonts/inter_18pt-BoldItalic.ttf",
+      path: "../../public/fonts/Inter_18pt-BoldItalic.ttf",
       weight: "700",
       style: "italic",
     },
