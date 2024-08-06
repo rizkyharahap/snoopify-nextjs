@@ -1,0 +1,71 @@
+name: Deploy to staging environment
+
+on: 
+  workflow_dispatch:
+
+jobs: 
+  deploy-staging:
+    name: Deploy to staging
+    runs-on: ubuntu-latest
+
+    # Write your env here
+    # env:
+    #   NEXT_PUBLIC_API_KEY: ${{ secrets.NEXT_PUBLIC_API_KEY }}
+    #   DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+    steps:
+      - name: Checkout Code
+        uses: google-github-actions/setup-gcloud@v0.6.0
+        with:
+          project_id: ${{ secrets.PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      # - name: Generate Environment var for staging stage
+      #   run: |
+      #     touch .env
+      #     echo NEXT_PUBLIC_API_KEY=${{ secrets.NEXT_PUBLIC_API_KEY }} >> .env
+      #     echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> .env
+      #     cat .env
+
+      - name: Configure Docker for GCP
+        run: gcloud auth configure-docker gcr.io
+
+      - name: Build and Push Docker image
+        # Write your env here
+        # run: |
+        #   docker build \
+        #   --build-arg NEXT_PUBLIC_API_KEY=${{ secrets.NEXT_PUBLIC_API_KEY }} \ 
+        #   --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
+        #   -t gcr.io/<Project_ID>/<Image>:latest .
+        #   docker push gcr.io/${{ secrets.PROJECT_ID }}/<Image>:latest
+        run: |
+          docker build \
+          -t gcr.io/<Project_ID>/<Image>:latest .
+          docker push gcr.io/${{ secrets.PROJECT_ID }}/<Image>:latest
+
+      - name: Deploy Docker container to VM
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          # script: |
+          #    docker pull gcr.io/${{ secrets.PROJECT_ID }}/<Image>:latest
+          #    docker stop <Image> || true
+          #    docker rm <Image> || true
+          #    docker image prune -a -f
+          #    docker run -d --name <Image> -p 3000:3000 \
+          #    -e NEXT_PUBLIC_API_KEY=${{ secrets.NEXT_PUBLIC_API_KEY }} \
+          #    -e DATABASE_URL=${{ secrets.DATABASE_URL }} \ 
+          #    gcr.io/<Project_ID>/<Image>:latest
+          script: |
+             docker pull gcr.io/${{ secrets.PROJECT_ID }}/<Image>:latest
+             docker stop <Image> || true
+             docker rm <Image> || true
+             docker image prune -a -f
+             docker run -d --name <Image> -p 3000:3000 \
+             gcr.io/<Project_ID>/<Image>:latest
+
+      
