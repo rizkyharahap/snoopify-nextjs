@@ -1,9 +1,9 @@
 name: Deploy to staging environment
 
-on: 
+on:
   workflow_dispatch:
 
-jobs: 
+jobs:
   deploy-staging:
     name: Deploy to staging
     runs-on: ubuntu-latest
@@ -35,14 +35,14 @@ jobs:
         # Write your env here
         # run: |
         #   docker build \
-        #   --build-arg NEXT_PUBLIC_API_KEY=${{ secrets.NEXT_PUBLIC_API_KEY }} \ 
+        #   --build-arg NEXT_PUBLIC_API_KEY=${{ secrets.NEXT_PUBLIC_API_KEY }} \
         #   --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
         #   -t gcr.io/<Project_ID>/<Image>:latest .
         #   docker push gcr.io/${{ secrets.PROJECT_ID }}/<Image>:latest
         run: |
           docker build \
-          -t gcr.io/<Project_ID>/<Image>:latest .
-          docker push gcr.io/${{ secrets.PROJECT_ID }}/<Image>:latest
+          -t gcr.io/${{ secrets.PROJECT_ID }}/snoopify-dev:latest .
+          docker push gcr.io/${{ secrets.PROJECT_ID }}/snoopify-dev:latest
 
       - name: Deploy Docker container to VM
         uses: appleboy/ssh-action@master
@@ -58,14 +58,12 @@ jobs:
           #    docker image prune -a -f
           #    docker run -d --name <Image> -p 3000:3000 \
           #    -e NEXT_PUBLIC_API_KEY=${{ secrets.NEXT_PUBLIC_API_KEY }} \
-          #    -e DATABASE_URL=${{ secrets.DATABASE_URL }} \ 
+          #    -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
           #    gcr.io/<Project_ID>/<Image>:latest
           script: |
-             docker pull gcr.io/${{ secrets.PROJECT_ID }}/<Image>:latest
-             docker stop <Image> || true
-             docker rm <Image> || true
-             docker image prune -a -f
-             docker run -d --name <Image> -p 3000:3000 \
-             gcr.io/<Project_ID>/<Image>:latest
-
-      
+            docker pull gcr.io/${{ secrets.PROJECT_ID }}/snoopify-dev:latest
+            docker stop snoopify-dev || true
+            docker rm snoopify-dev || true
+            docker image prune -a -f
+            docker run -d --name snoopify-dev -p 3000:3000 \
+            gcr.io/${{ secrets.PROJECT_ID }}/snoopify-dev:latest
