@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Pull the latest changes from the master branch
-git pull origin master
+git checkout master
+git pull
 
 
 # Get the latest tag from GitHub
