@@ -16,5 +16,5 @@ docker load -i ~/images/snoopify-nextjs:$TAG.tar
 
 # Deploy the application using Docker Compose
 export TAG=$TAG
-docker-compose down
-docker-compose up -d
+docker compose down
+docker compose up -d
