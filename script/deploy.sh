@@ -15,5 +15,4 @@ docker buildx build -t snoopify-nextjs:$TAG .
 
 # Deploy the application using Docker Compose
 export TAG=$TAG
-docker compose down
 docker compose up -d
