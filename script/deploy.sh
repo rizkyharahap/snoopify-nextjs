@@ -4,7 +4,6 @@
 git checkout master
 git pull
 
-
 # Get the latest tag from GitHub
 TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
 
