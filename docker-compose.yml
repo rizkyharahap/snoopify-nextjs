@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   web:
-    image: username/repository:${TAG}
+    image: snoopify-nextjs:${TAG}
     ports:
       - "3000:3000"
     environment:
