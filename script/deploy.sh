@@ -11,8 +11,9 @@ TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
 # Print tag for verification
 echo "Deploying version: $TAG"
 
-# Build Docker image with versioning
-docker build -t username/repository:$TAG .
+# Load Docker image with versioning
+cd ~/images
+docker load -i username/repository:$TAG
 
 # Deploy the application using Docker Compose
 export TAG=$TAG
