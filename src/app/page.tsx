@@ -1,6 +1,10 @@
 import Image from "next/image";
+import ClientComponent from "./_components/ClientComponent";
+import { logger } from "@/libs/logger";
 
 export default function Home() {
+  logger.debug({ module: "Home" }, "Test Home");
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <h1> Mantap </h1>
@@ -109,6 +113,7 @@ export default function Home() {
           </p>
         </a>
       </div>
+      <ClientComponent />
     </main>
   );
 }
