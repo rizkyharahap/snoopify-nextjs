@@ -11,8 +11,8 @@ TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
 # Print tag for verification
 echo "Deploying version: $TAG"
 
-# Load Docker image with versioning
-docker load -i ~/images/snoopify-nextjs:$TAG.tar
+# Build Docker image with versioning
+docker build -t snoopify-nextjs:$TAG .
 
 # Deploy the application using Docker Compose
 export TAG=$TAG
